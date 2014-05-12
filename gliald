@@ -1,0 +1,26 @@
+#!/usr/bin/php
+<?php
+if (PHP_SAPI !== 'cli') {
+    throw new \Exception('GLI-022 : You can only create daemon from the command line (CLI-mode)');
+}
+
+
+if (PHP_OS !== 'Linux') {
+    throw new \Exception('GLI-023 : The deamon is only supported on Linux');
+}
+
+
+if (!function_exists('posix_getpid')) {
+    throw new \Exception('PHP is compiled without --enable-posix directive');
+}
+
+
+if (!defined('SIGHUP')) {
+    throw new \Exception('PHP is compiled without --enable-pcntl directive');
+}
+
+
+$options = array('start', 'restart', 'stop');
+
+
+
