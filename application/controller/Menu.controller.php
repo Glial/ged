@@ -115,9 +115,6 @@ class Menu extends Controller
         global $db;
         $tree = new Tree;
 
-
-
-
         $sql = sprintf(
                 'SELECT * FROM %s WHERE group_id = %s ORDER BY %s, %s', MENU_TABLE, $group_id, MENU_PARENT, MENU_POSITION
         );
@@ -225,11 +222,10 @@ class Menu extends Controller
         $this->view = false;
         $this->is_ajax = true;
 
-        if (!empty($_POST)) {
-            file_put_contents("gg.txt", json_encode($_POST['menu']));
+        $db = $this->di['db']->sql('default');
 
-            debug($_POST);
-            //adodb_pr($menu);
+        if (!empty($_POST)) {
+
             $menu = $_POST['menu'];
 
             foreach ($menu as $k => $v) {
@@ -239,86 +235,23 @@ class Menu extends Controller
                     $menu2[$v][] = $k;
                 }
             }
-            
-            debug($menu2);
 
-            $success = 0;
             if (!empty($menu2)) {
+
+                $sql = '';
                 foreach ($menu2 as $k => $v) {
                     $i = 1;
                     foreach ($v as $v2) {
-                        $data[MENU_PARENT] = $k;
-                        $data[MENU_POSITION] = $i;
-                        
-                        
-                        
-                        
-                        if ($this->update(MENU_TABLE, $data, MENU_ID . ' = ' . $v2)) {
-                            $success++;
-                        }
+                        $sql .= "UPDATE menu SET parent_id = " . $db->sql_real_escape_string($k) . ", position = " . $db->sql_real_escape_string($i) . " WHERE id = " . $db->sql_real_escape_string($v2) . ";";
+                        //$db->sql_query($sql);
                         $i++;
                     }
                 }
+                $db->sql_multi_query($sql);
+
+                echo "true";
             }
         }
-    }
-
-    function update($table_name, $data, $where)
-    {
-        return $this->AutoExecute($table_name, $data, 'UPDATE', $where);
-    }
-
-    function AutoExecute($table_name, $data, $action = 'INSERT', $where = '')
-    {
-        
-        debug($data);
-        
-        switch ($action) {
-            case 'INSERT': $sql = 'INSERT INTO ';
-                break;
-            case 'UPDATE': $sql = 'UPDATE ';
-                break;
-        }
-        $sql .= $table_name;
-        $sql .= ' SET ';
-        foreach ($data as $key => $value) {
-            if (is_array($value)) {
-                $value = $value[0];
-            } else {
-                $value = $this->quote_smart($value);
-            }
-            $d[] = "$key = $value";
-        }
-        $sql .= implode(', ', $d);
-        if ($action == 'UPDATE') {
-            $sql .= " WHERE $where";
-        }
-
-        echo $sql.PHP_EOL;
-        //$this->Execute($sql);
-        //return $this->result;
-    }
-
-    function quote_smart($value)
-    {
-        // Stripslashes
-        if (get_magic_quotes_gpc()) {
-            $value = stripslashes($value);
-        }
-        // Quote if not a number or a numeric string
-        if (!is_numeric($value)) {
-            $value = "'" . mysql_real_escape_string($value) . "'";
-        }
-        return $value;
-    }
-
-    function Execute($sql)
-    {
-        $this->result = mysql_query($sql, $this->link);
-        if (!$this->result) {
-            die('Invalid query: ' . mysql_error());
-        }
-        return $this->result;
     }
 
 }
