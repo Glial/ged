@@ -18,7 +18,7 @@ var $schema = "CREATE TABLE `translation_main` (
   `line_found` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `key` (`key`,`destination`)
-) ENGINE=MyISAM AUTO_INCREMENT=32601 DEFAULT CHARSET=utf8";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
 var $field = array("id","id_history_etat","key","source","destination","text","date_inserted","date_updated","translate_auto","file_found","line_found");
 

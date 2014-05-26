@@ -16,7 +16,7 @@ var $schema = "CREATE TABLE `translation_en` (
   `file_found` varchar(255) NOT NULL,
   `line_found` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`key`,`file_found`),
+  UNIQUE KEY `key` (`key`),
   KEY `id_history_etat` (`id_history_etat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 

@@ -244,7 +244,7 @@ if (IS_CLI) {
 
 
 //demarre l'application
-FactoryController::rootNode($_SYSTEM['controller'], $_SYSTEM['action'], $_SYSTEM['param']);
+$layout = FactoryController::rootNode($_SYSTEM['controller'], $_SYSTEM['action'], $_SYSTEM['param']);
 
 
 $i = 10;
@@ -253,7 +253,7 @@ $i = 10;
 
 
 
-if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
+if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX) && $layout) {//ENVIRONEMENT
     $execution_time = microtime(true) - TIME_START;
 
     echo "<hr />";
@@ -318,4 +318,3 @@ if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
         }
     }
 }
-    

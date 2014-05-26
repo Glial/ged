@@ -11,6 +11,6 @@ driver=mysql
 hostname=localhost
 user=root
 password='zeb33tln'
-database=comptable
+database=ged
 
 

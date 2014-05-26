@@ -16,9 +16,9 @@ var $schema = "CREATE TABLE `translation_fr` (
   `file_found` varchar(255) NOT NULL,
   `line_found` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `key` (`key`,`file_found`),
+  UNIQUE KEY `key` (`key`),
   KEY `id_history_etat` (`id_history_etat`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8";
+) ENGINE=InnoDB DEFAULT CHARSET=utf8";
 
 var $field = array("id","id_history_etat","key","source","text","date_inserted","date_updated","translate_auto","file_found","line_found");
 
