@@ -148,10 +148,7 @@ class Menu extends Controller
         $this->addJavascript(array("jquery-latest.min.js", "jquery-ui-1.10.3.custom.min.js", "jquery.mjs.nestedSortable.js", "menu.js", "bootstrap.min.js"));
         //$data['menu'] = $this->diplay(1);
 
-
         $data['menum'] = $this->menuManager(1);
-
-
         $this->set('data', $data);
     }
 
