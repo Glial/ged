@@ -145,6 +145,21 @@ class Menu extends Controller
     function index()
     {
 
+
+        $ressources = $this->di['acl']->getResources();
+        
+        $data['ressource'] = array();
+        foreach($ressources as $ressource => $val)
+        {
+            $tmp = array();
+            
+            $tmp['id'] = $ressource;
+            $tmp['libelle'] = $ressource;
+            
+            $data['ressource'][] = $tmp;
+        }
+        
+
         $this->addJavascript(array("jquery-latest.min.js", "jquery-ui-1.10.3.custom.min.js", "jquery.mjs.nestedSortable.js", "menu.js", "bootstrap.min.js"));
         //$data['menu'] = $this->diplay(1);
 
@@ -248,6 +263,69 @@ class Menu extends Controller
 
                 echo "true";
             }
+        }
+    }
+
+    public function addItem()
+    {
+        $this->view = false;
+        $this->layout_name = false;
+
+
+        var_dump($_POST);
+
+        if (isset($_POST['title'])) {
+            $data[MENU_TITLE] = trim($_POST['title']);
+            if (!empty($data[MENU_TITLE])) {
+                $data[MENU_URL] = $_POST['url'];
+                $data[MENU_CLASS] = $_POST['class'];
+                $data[MENU_GROUP] = $_POST['group_id'];
+                
+                
+                
+                $data[MENU_POSITION] = $this->get_last_position($_POST['group_id']) + 1;
+
+
+                var_dump($data);
+
+                if ($this->db->insert(MENU_TABLE, $data)) {
+                    $data[MENU_ID] = $this->db->Insert_ID();
+                    $response['status'] = 1;
+                    $li_id = 'menu-' . $data[MENU_ID];
+                    $response['li'] = '<li id="' . $li_id . '" class="sortable">' . $this->get_label($data) . '</li>';
+                    $response['li_id'] = $li_id;
+                } else {
+                    $response['status'] = 2;
+                    $response['msg'] = 'Add menu error.';
+                }
+            } else {
+                $response['status'] = 3;
+            }
+            header('Content-type: application/json');
+            echo json_encode($response);
+        }
+    }
+
+    public function deleteItem()
+    {
+        if (isset($_POST['id'])) {
+            $id = (int) $_POST['id'];
+
+            $this->get_descendants($id);
+            if (!empty($this->ids)) {
+                $ids = implode(', ', $this->ids);
+                $id = "$id, $ids";
+            }
+
+            $sql = sprintf('DELETE FROM %s WHERE %s IN (%s)', MENU_TABLE, MENU_ID, $id);
+            $delete = $this->db->Execute($sql);
+            if ($delete) {
+                $response['success'] = true;
+            } else {
+                $response['success'] = false;
+            }
+            header('Content-type: application/json');
+            echo json_encode($response);
         }
     }
 

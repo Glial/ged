@@ -205,7 +205,7 @@ jQuery(function($) {
         } else {
             $.ajax({
                 type: 'POST',
-                url: $(this).attr('action'),
+                url: 'http://192.168.1.12/ged/en/menu/addItem',
                 data: $(this).serialize(),
                 error: function() {
                     gbox.show({
