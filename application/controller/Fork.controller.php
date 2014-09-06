@@ -120,9 +120,11 @@ class Fork extends Controller
             pcntl_wait($status);
             echo "[pere] Mon fils est mort! Bye! (status : $status)" . PHP_EOL;
 
-            foreach ($db->sql_fetch_yield("SHOW GLOBAL VARIABLES") as $database) {
-                echo "PERE : " . $database['Database'] . PHP_EOL;
-            }
+
+            /*
+              foreach ($db->sql_fetch_yield("SHOW GLOBAL VARIABLES") as $database) {
+
+              } */
         } else {
             for ($i = 0; $i < 10; $i++) {
                 echo "[fils] Je suis le fils, c'est l'iteration $i, mon pid est : " . posix_getpid() . " je v dormir pour une seconde! ..." . PHP_EOL;
@@ -141,9 +143,78 @@ class Fork extends Controller
             exit;
         }
 
-        foreach ($db->sql_fetch_yield("SHOW TABLES") as $database) {
-            echo "SHOW TABLES". PHP_EOL;
+
+        /*
+          foreach ($db->sql_fetch_yield("SHOW TABLES") as $database) {
+          echo "SHOW TABLES" . PHP_EOL;
+          } */
+    }
+
+    public function queue()
+    {
+        
+    }
+
+    public function short()
+    {
+
+        $this->view = false;
+
+        $db = $this->di['db']->sql('default');
+
+
+        $pid = pcntl_fork();
+        if ($pid == -1) {
+            die('Creation de processus impossible');
+        } elseif ($pid) {
+
+
+
+            // parent
+            //it works !
+            foreach ($db->sql_fetch_yield("SHOW DATABASES") as $database) {
+                echo $database['Database'] . PHP_EOL;
+            }
+
+            pcntl_wait($status);
+
+
+            //do not work
+            /*
+              foreach ($db->sql_fetch_yield("SHOW DATABASES") as $database) {
+              echo $database['Database'] . PHP_EOL;
+              }/* */
+        } else {
+
+            
+            /* do not work, need a sleep time => Commands out of sync; you can't run this command now
+              foreach ($db->sql_fetch_yield("SHOW DATABASES") as $database) {
+              echo $database['Database'] . PHP_EOL;
+              }/* */
+            
+            usleep(500); // between 280 and 500 crash randomly if server busy
+            
+            //do not work need a sleep time strange ???
+            foreach ($db->sql_fetch_yield("SHOW DATABASES") as $database) {
+                echo $database['Database'] . PHP_EOL;
+            }
+
+            sleep(1);
+            //it works !
+            foreach ($db->sql_fetch_yield("SHOW DATABASES") as $database) {
+                echo $database['Database'] . PHP_EOL;
+            }
+
+            
+            exit;
+            // the child process does nothing and exits gracefully
         }
+
+        //do not work 
+        /*
+          foreach ($db->sql_fetch_yield("SHOW DATABASES") as $database) {
+          echo $database['Database'] . PHP_EOL;
+          }/* */
     }
 
 }
