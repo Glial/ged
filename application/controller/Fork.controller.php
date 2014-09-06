@@ -138,6 +138,7 @@ class Fork extends Controller
 
 
             echo "[fils] Woups! je meurs!" . PHP_EOL;
+            exit;
         }
 
         foreach ($db->sql_fetch_yield("SHOW TABLES") as $database) {
