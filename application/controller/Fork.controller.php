@@ -8,6 +8,11 @@
 
 use \Glial\Synapse\Controller;
 
+function tick_handler()
+{
+    echo "tick_handler() called\n";
+}
+
 class Fork extends Controller
 {
 
@@ -275,6 +280,66 @@ class Fork extends Controller
         foreach ($db->sql_fetch_yield("SHOW DATABASES") as $database) {
             echo $database['Database'] . PHP_EOL;
         }/* */
+    }
+
+    public function multi()
+    {
+        $this->view = false;
+
+        for ($i = 0; $i < 10; $i++) {
+            $pid = pcntl_fork();
+            if ($pid == -1) {
+                die('Creation de processus impossible');
+            } elseif ($pid == 0) {
+                echo "[fils] Fils $i travaille" . PHP_EOL;
+                sleep(1);
+                echo "[fils] Fils $i finit son execution" . PHP_EOL;
+                exit;
+            } else {
+                echo "[pere] Debut du pere $i" . PHP_EOL;
+                pcntl_wait($status);
+                echo "[pere] fin du pere $i" . PHP_EOL;
+            }
+        }
+    }
+
+    public function multi_sans_pere()
+    {
+        $this->view = false;
+
+        echo "[pere] Debut du pere" . PHP_EOL;
+        for ($i = 0; $i < 10; $i++) {
+            $pid = pcntl_fork();
+            if ($pid == -1) {
+                die('Impossible de creer un processus');
+            } elseif ($pid == 0) {
+                echo "[fils] Fils $i Travaille" . PHP_EOL;
+                sleep($i);
+                echo "[fils] Fils $i Finit son execution" . PHP_EOL;
+                exit;
+            }
+        }
+        echo "[pere] Fin du pere" . PHP_EOL;
+        exit;
+    }
+
+    function test()
+    {
+        declare(ticks = 1);
+
+// A function called on each tick event
+
+         $this->view = false;
+
+
+
+        $a = 1;
+        
+        if ($a > 0) {
+            $a += 2;
+            register_tick_function('tick_handler');
+            print($a);
+        }
     }
 
 }
