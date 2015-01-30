@@ -9,7 +9,6 @@ class Home extends Controller
     {
         $this->layout_name = 'default';
 
-
         $this->title = __("Home");
         $this->ariane = " > " . __("Welcome to my first page with Glial !");
 
@@ -18,8 +17,6 @@ class Home extends Controller
 
     function test()
     {
-
-
         while (true) {
             echo "sfgdfhg".PHP_EOL;
             sleep(2);

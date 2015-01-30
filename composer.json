@@ -15,7 +15,6 @@
         "ext-gd": "*",
         "ext-mcrypt": "*",
         "glial/glial": "dev-master",
-        "monolog/monolog": "1.8.*",
         "vatson/isolated-callback": "*"
     },
     "require-dev": {

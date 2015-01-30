@@ -51,6 +51,14 @@ echo '';
 </form>
 
 
+<?php
+
+\Glial\Synapse\FactoryController::addNode("menu", "", $data['param']);
+
+
+?>
+
+
 <script>
     var _BASE_URL = './';
     var current_group_id = 1;
